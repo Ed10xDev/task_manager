@@ -5,6 +5,7 @@ const express = require('express')
 const taskRouter = require('./routes/task_routes')
 const connectDB = require('./database/connect')
 const errorHandler = require('./middleware/errorHandler')
+const notFound = require('./middleware/notFound')
 
 const app = express()
 
@@ -17,6 +18,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/tasks', taskRouter)
+
+// handle all routes
+app.use(notFound)
 
 // error handler
 app.use(errorHandler)
