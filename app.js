@@ -1,8 +1,9 @@
 // Imports
-require('dotenv')
+require('dotenv').config()
 
 const express = require('express')
 const taskRouter = require('./routes/task_routes')
+const connectDB = require('./database/connect')
 
 const app = express()
 
@@ -14,8 +15,17 @@ app.get('/', (req, res) => {
 app.use('/api/v1/tasks', taskRouter)
 
 // server
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+const start = async () => {
+    try {
+        await connectDB(process.env.MONGO_URI)
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+start()
