@@ -14,33 +14,35 @@ const createTask = asyncWrapper(async (req, res) => {
     res.status(200).json({ task })
 })
 
-const getSingleTask = async (req, res) => {
-    try {
-        await res.status(200).json({ msg: 'get single tasks' })
-    } catch (error) {
-        res.status(500).json({
-            msg: 'Something went wrong. Please try again later.',
-        })
+const getSingleTask = asyncWrapper(async (req, res) => {
+    const { id: task_ID } = req.params
+    const task = await Tasks.findOne({ _id: task_ID })
+
+    if (!task) {
+        return res.status(404).json({ msg: 'Task not found' })
     }
-}
-const updateTask = async (req, res) => {
-    try {
-        await res.status(200).json({ msg: 'update a task' })
-    } catch (error) {
-        res.status(500).json({
-            msg: 'Something went wrong. Please try again later.',
-        })
+    res.status(200).json({ task })
+})
+
+const updateTask = asyncWrapper(async (req, res) => {
+    const { id: task_ID } = req.params
+    const task = await Tasks.findOneAndUpdate({ _id: task_ID }, req.body, {
+        new: true,
+    })
+    if (!task) {
+        return res.status(404).json({ msg: 'Task not found' })
     }
-}
-const deleteTask = async (req, res) => {
-    try {
-        await res.status(200).json({ msg: 'delete a task' })
-    } catch (error) {
-        res.status(500).json({
-            msg: 'Something went wrong. Please try again later.',
-        })
+    res.status(200).json({ task })
+})
+
+const deleteTask = asyncWrapper(async (req, res) => {
+    const { id: task_ID } = req.params
+    const task = await Tasks.findOneAndDelete({ _id: task_ID })
+    if (!task) {
+        return res.status(404).json({ msg: 'Task not found' })
     }
-}
+    res.status(200).json({ task })
+})
 
 module.exports = {
     getAllTasks,

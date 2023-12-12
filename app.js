@@ -4,6 +4,7 @@ require('dotenv').config()
 const express = require('express')
 const taskRouter = require('./routes/task_routes')
 const connectDB = require('./database/connect')
+const errorHandler = require('./middleware/errorHandler')
 
 const app = express()
 
@@ -16,6 +17,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/v1/tasks', taskRouter)
+
+// error handler
+app.use(errorHandler)
 
 // server
 const PORT = process.env.PORT || 5000
